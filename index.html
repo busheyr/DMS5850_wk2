@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>DMS5850 — Week 2: Capital Allocation &amp; Financial Risk</title><style>
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: 62.5%; height:100%; max-width:100vw; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { margin:0; height:100%; background:#ffffff; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size:1.8rem; line-height:1.8; color:#111; overflow:hidden; position:relative; }
+.background-dots { position:fixed; top:0; right:0; width:60%; opacity:0.15; pointer-events:none; z-index:0; }
+.lesson-shell { height:100%; display:flex; flex-direction:column; position:relative; z-index:1; }
+.lesson-shell__header { padding:1.8rem 3rem; background:#fff; border-bottom:1px solid #ececec; display:flex; align-items:center; justify-content:space-between; gap:2rem; }
+.lesson-shell__title { font-size:2.2rem; font-weight:700; line-height:1.2; }
+.lesson-shell__meta { font-size:1.5rem; color:#555; white-space:nowrap; }
+.lesson-shell__body { flex:1; overflow-y:auto; padding:5rem 0; }
+.lesson-page { width:100%; max-width:104rem; margin:0 auto; padding:0 3.2rem; }
+:root { --space-xs:1.4rem; --space-sm:2.2rem; --space-md:3.4rem; --space-lg:5rem; --space-xl:7rem; --blue:#007CFF; --green:#0b6b3a; --ink:#111; --muted:#60656f; --soft:#f5f8fb; --line:#dde4ee; }
+.lesson-block { margin-block:var(--space-xl); padding:var(--space-lg); background:#fff; border-radius:.8rem; }
+.lesson-block.alt { background:#f7f9fb; box-shadow:0 .4rem 1.6rem rgba(0,0,0,.04); }
+.lesson-block.tint { background:#f4f9ff; box-shadow:0 .4rem 1.6rem rgba(0,0,0,.04); }
+.lesson-block h1 { font-size:4rem; line-height:1.12; margin:0 0 var(--space-sm); }
+.lesson-block h2 { font-size:2.8rem; margin:0 0 var(--space-sm); line-height:1.25; }
+.lesson-block h3 { font-size:2rem; margin:0 0 1rem; line-height:1.35; }
+.lesson-block h4 { font-size:1.8rem; margin:0 0 .6rem; line-height:1.35; }
+.lesson-block p { margin:0 0 var(--space-sm); }
+.lesson-block ul { margin:0 0 var(--space-sm); padding-left:2.4rem; }
+.lesson-block li { margin:.6rem 0; }
+.cover-screen { position:fixed; inset:0; background:#fff; z-index:5000; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:2rem; transition:opacity .35s ease, visibility .35s ease; }
+.cover-screen.hidden { opacity:0; visibility:hidden; }
+.cover-title { font-size:3.6rem; line-height:1.15; font-weight:750; margin-bottom:3rem; max-width:78rem; }
+.cover-btn { padding:1.2rem 2.4rem; font-size:1.8rem; border-radius:.6rem; border:0; background:var(--blue); color:#fff; cursor:pointer; font-weight:700; transition:background .2s ease; }
+.cover-btn:hover { background:#0066d1; }
+.hero { border-top:.8rem solid var(--blue); background:linear-gradient(180deg,#fff,#f7fbff); }
+.callout { border-left:.6rem solid var(--blue); padding:1.8rem 2.2rem; background:#f4f9ff; border-radius:.4rem; margin:var(--space-sm) 0; font-weight:650; }
+.callout2 { text-align:center; font-size:2.3rem; line-height:1.6; color:#1a1a1a; max-width:76rem; margin:3.6rem auto; padding:2rem 1rem; position:relative; }
+.callout2::before { content:""; width:6rem; height:.3rem; background:var(--green); border-radius:1rem; display:block; margin:0 auto 2rem; }
+.circle-list { padding-left:0 !important; list-style:none; margin-top:2rem; display:grid; gap:1.2rem; }
+.circle-list li { display:flex; align-items:center; margin:0; }
+.circle-num { width:3.2rem; height:3.2rem; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; margin-right:1rem; flex:0 0 auto; }
+.split { display:grid; grid-template-columns:minmax(0,1fr) minmax(28rem,.8fr); gap:3rem; align-items:start; }
+.panel { border:1px solid var(--line); border-radius:.8rem; padding:2.2rem; background:#fff; }
+.panel.green { border-left:.5rem solid var(--green); }
+.grid-3, .grid-4, .grid-2 { display:grid; gap:1.8rem; margin-top:2rem; }
+.grid-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.grid-3 { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.grid-4 { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.mini-card { border:1px solid var(--line); border-radius:.8rem; padding:2rem; background:#fff; min-height:100%; }
+.mini-card h3, .mini-card h4 { color:#0d3155; }
+.reveal-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(23rem,1fr)); gap:1.6rem; margin-top:2rem; }
+.reveal-card { border:1px solid var(--line); border-radius:.8rem; background:#fff; overflow:hidden; }
+.reveal-btn { width:100%; border:0; background:#eef6ff; color:#10243a; padding:1.6rem; font-size:1.8rem; font-weight:700; text-align:left; cursor:pointer; }
+.reveal-content { display:none; padding:1.8rem; }
+.reveal-card.open .reveal-content { display:block; }
+.accordion { border:1px solid #d9e1ea; border-radius:.8rem; overflow:hidden; background:#fff; }
+.accordion-item + .accordion-item { border-top:1px solid #d9e1ea; }
+.accordion-header { background:#f7f9fb; padding:1.6rem 1.8rem; cursor:pointer; font-size:1.8rem; font-weight:700; }
+.accordion-content { display:none; padding:1.8rem; background:#fff; }
+.accordion-item.open .accordion-content { display:block; }
+.lesson-tabs { display:flex; flex-wrap:wrap; gap:1rem; margin-top:1.6rem; }
+.tab-btn { padding:.9rem 1.5rem; border-radius:.7rem; border:1px solid #cbd7e5; background:#fff; cursor:pointer; font-size:1.6rem; font-weight:650; }
+.tab-btn.active { background:#eaf4ff; border-color:#7dbaff; color:#07315b; }
+.tab-content { display:none; margin-top:1.8rem; }
+.tab-content.active { display:block; }
+.card-sequence { position:relative; margin:3rem auto; width:100%; max-width:82rem; }
+.card-sequence::before { content:""; position:absolute; left:2rem; top:0; width:2px; height:100%; background:#d9e1ea; z-index:0; }
+.sequence-card { position:relative; background:#fff; border-radius:.8rem; padding:2.2rem 2.6rem; margin:2.4rem 0 2.4rem 4rem; box-shadow:0 4px 18px rgba(0,0,0,.07); border-left:.4rem solid var(--green); z-index:2; }
+.sequence-date { color:var(--green); font-weight:800; font-size:1.6rem; margin-bottom:.6rem; }
+.choice-block { display:grid; grid-template-columns:28rem 1fr; gap:2rem; align-items:start; }
+.choice-menu { display:grid; gap:1rem; }
+.choice-btn { border:1px solid #cbd7e5; background:#fff; text-align:left; padding:1.4rem 1.6rem; border-radius:.7rem; font-size:1.65rem; font-weight:700; cursor:pointer; }
+.choice-btn.active { border-color:var(--blue); background:#eaf4ff; }
+.choice-panel { display:none; }
+.choice-panel.active { display:block; }
+.comparison { display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; margin-top:2rem; }
+.comparison .panel:first-child { border-top:.5rem solid #7a8a9a; }
+.comparison .panel:last-child { border-top:.5rem solid var(--green); }
+.quote-line { border-block:1px solid var(--line); padding:2.4rem 0; font-weight:700; color:#1b2d40; }
+.section-divider { text-align:center; background:#fff; border-top:.6rem solid var(--green); box-shadow:0 .4rem 1.6rem rgba(0,0,0,.04); }
+.section-divider h2 { margin-bottom:0; }
+.continue-wrap { width:100%; margin:3rem 0; }
+.continue-btn { width:100%; border:0; border-radius:.8rem; background:#006649; color:#fff; min-height:6.4rem; font-size:1.9rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 .4rem 1.6rem rgba(0,102,73,.18); transition:background .2s ease, transform .2s ease; }
+.continue-btn:hover { background:#00563e; transform:translateY(-1px); }
+.continue-btn:focus-visible { outline:.3rem solid #7dbaff; outline-offset:.3rem; }
+.template-note { color:var(--muted); font-size:1.6rem; }
+.code-note { display:block; margin-top:1rem; padding:1.4rem 1.6rem; border:1px dashed #cbd7e5; border-radius:.8rem; background:#fbfdff; color:#425466; font-size:1.55rem; }
+@media (max-width:850px) {
+  .lesson-shell__header { align-items:flex-start; flex-direction:column; }
+  .split, .grid-2, .grid-3, .grid-4, .choice-block, .comparison { grid-template-columns:1fr; }
+  .lesson-block { padding:3rem 2rem; margin-block:4rem; }
+  .lesson-page { padding:0 1.8rem; }
+}
+.primary,.cover-btn{padding:1.15rem 2rem;border:0;border-radius:.6rem;background:var(--blue);color:#fff;cursor:pointer;font-size:1.7rem;font-weight:700}.primary:hover,.cover-btn:hover{background:#0066d1}.secondary{padding:1rem 1.5rem;border:1px solid #aebdcd;border-radius:.6rem;background:#fff;cursor:pointer;font-size:1.6rem;font-weight:650}.options{display:grid;gap:1rem;margin:2rem 0}.option{display:flex;gap:1rem;align-items:flex-start;border:1px solid var(--line);border-radius:.7rem;background:#fff;padding:1.3rem 1.5rem;cursor:pointer}.option:hover{border-color:#7dbaff}.option input{margin-top:.55rem;accent-color:var(--blue)}.feedback{display:none;margin-top:1.6rem;padding:1.4rem 1.6rem;border-radius:.6rem;font-weight:650}.feedback.show{display:block}.feedback.correct{background:#e7f6ed;color:#07562d;border-left:.5rem solid var(--green)}.feedback.incorrect{background:#fff0f0;color:#7c1e1e;border-left:.5rem solid var(--red)}.assessment-actions{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1.8rem}
+:root{--blue:#006bdb;--red:#a32626}body{height:auto;overflow:auto}.lesson-shell{height:auto;min-height:100vh}.lesson-shell__body{overflow:visible;padding:2rem 0}.lesson-block{margin-block:4rem}button,textarea{font:inherit}:focus-visible{outline:3px solid #006bdb;outline-offset:4px}.lesson-nav{display:flex;flex-wrap:wrap;gap:1rem 2rem;margin-top:2rem}.lesson-nav a{color:#075594;font-size:1.6rem}.eyebrow{font-size:1.5rem;color:#536477;font-weight:700}.circle-list li{align-items:flex-start}.circle-num{margin-top:.4rem}.dimension{margin:2rem 0}.dimension summary{padding:1.4rem 1.8rem;background:#eef6ff;font-weight:650;cursor:pointer}.dimension details p{padding:1.8rem;margin:0}.dimension h3{color:#0d3155}.reflection{margin:2.5rem 0}.reflection label{display:block;margin-bottom:1rem}.reflection textarea{width:100%;min-height:15rem;resize:vertical;padding:1.5rem;border:1px solid #aebdcd;border-radius:.6rem;background:white;color:#111}.assessment+.assessment{border-top:1px solid var(--line);padding-top:3rem;margin-top:3rem}fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-weight:650;padding:0}.skip-link{position:absolute;top:-10rem;left:1rem;background:white;padding:1rem;z-index:10}.skip-link:focus{top:1rem}.mini-card h3{font-size:1.9rem}.notes-status{min-height:2rem;font-size:1.6rem;color:#07562d}@media(max-width:850px){.lesson-block h1{font-size:3.2rem}.lesson-shell__meta{white-space:normal}}@media print{body{font-size:12pt}.lesson-block{padding:1rem;margin:2rem 0;break-inside:avoid}.lesson-nav,.assessment-actions,.check,.skip-link{display:none}details::details-content{display:block}.reflection textarea{min-height:12rem}}
+
+.match-card{margin:2rem 0;padding:2.2rem;border:1px solid var(--line);border-radius:.8rem;background:white}.match-card label{display:block;font-weight:650;margin-bottom:1rem}.match-card select{width:100%;font:inherit;padding:1rem;border:1px solid #aebdcd;border-radius:.5rem;background:white}.match-card .feedback{font-size:1.65rem}.framework-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.8rem}.framework-grid .mini-card{border-top:4px solid var(--blue)}.framework-grid .mini-card:nth-child(2){border-color:#0b6b3a}.framework-grid .mini-card:nth-child(3){border-color:#84521d}.framework-grid .mini-card:nth-child(4){border-color:#7758a0}.comparison ul{margin-bottom:0}.comparison h3{margin-bottom:2rem}.skill-section{margin:2.2rem 0}.skill-section h3{color:#0d3155}@media(max-width:850px){.framework-grid{grid-template-columns:1fr}}
+
+.framework{margin:2rem 0}.framework h3{color:#0d3155}.risk{margin:2rem 0;padding:2.4rem;background:white;border:1px solid var(--line);border-radius:.8rem}.risk legend{font-weight:700;color:#0d3155;font-size:2rem}.risk fieldset{margin-top:2rem}.risk .option{font-size:1.65rem}.risk .feedback{font-size:1.65rem}.governance details{border:1px solid var(--line);border-radius:.8rem;background:white;margin:1.6rem 0}.governance summary{padding:1.8rem;cursor:pointer;font-weight:700}.governance details p{padding:0 1.8rem 1.8rem;margin:0}.match-summary{font-weight:650;color:#07562d}.reference-heading{font-size:1.5rem;color:#536477;margin-bottom:1rem}.primary:disabled{opacity:.6;cursor:default}@media print{.risk{break-inside:avoid}.governance details::details-content{display:block}}
+
+.factory-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin:2rem 0}.factory-map article{background:#eaf4ff;border-top:4px solid var(--blue);padding:1.5rem;font-size:1.55rem}.factory-map h4{font-size:1.6rem}.factory-map p{margin:0}.factory-detail{margin:1.5rem 0;border:1px solid var(--line);border-radius:.8rem;background:#fff}.factory-detail summary{cursor:pointer;font-weight:700;padding:1.7rem;color:#0d3155}.factory-detail .detail-body{padding:0 1.7rem 1.7rem}.protocol{padding:1.8rem;background:#eaf4ff;border-left:5px solid var(--blue);margin:2rem 0}.risk-columns{display:grid;grid-template-columns:1fr 1fr;gap:2rem}.risk-columns li{margin-bottom:1.8rem}.control{margin:1.4rem 0;padding:1.8rem;background:white;border-left:4px solid var(--green)}@media(max-width:850px){.factory-map,.risk-columns{grid-template-columns:1fr}}
+
+.term-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.8rem}.term-grid .panel{border-top:4px solid var(--blue)}.governance-card{margin:2rem 0;padding:2.4rem;border:1px solid var(--line);border-radius:.8rem;background:white}.governance-card h3{color:#0d3155}.scenario{padding:2.4rem;margin:2rem 0;border:1px solid var(--line);border-radius:.8rem;background:white}.scenario select{font:inherit;width:100%;padding:1rem;border:1px solid #aebdcd;border-radius:.6rem;margin:1rem 0}.scenario label{font-weight:700}.scenario .strategy{margin-top:1.5rem;border-left:4px solid var(--green);padding:1.5rem;background:#e7f6ed}.strategy[hidden]{display:none}.action-list{display:grid;gap:1.4rem}.action-list label{display:flex;align-items:flex-start;gap:1.4rem;padding:1.8rem;border:1px solid var(--line);border-radius:.8rem;background:white;cursor:pointer}.action-list input{margin-top:.7rem;accent-color:var(--green)}.action-list label:has(input:checked){background:#e7f6ed}.action-list input:checked+span{color:#07562d}.eyebrow{letter-spacing:.03em} .assessment-actions{margin-top:1rem}@media(max-width:850px){.term-grid{grid-template-columns:1fr}}@media print{.strategy[hidden]{display:block}.scenario select,.scenario button{display:none}}
+
+.media{margin:2.5rem 0;border:1px solid var(--line);border-radius:.8rem;padding:1.5rem;background:#fff}.media iframe{display:block;width:100%;height:48rem;border:0}.media a{color:#075594;font-size:1.6rem}.subsection{margin:3.5rem 0}.subsection h3{color:#0d3155;border-bottom:2px solid var(--line);padding-bottom:1rem}.drug-heading{font-size:1.9rem;color:#0d3155;margin-top:2.4rem}.safety{border-left:5px solid #a32626;background:#fff0f0;padding:1.8rem;margin:1.8rem 0}.dose{background:#f4f9ff;padding:1.6rem;border-radius:.6rem}.source-list li{margin-bottom:1.5rem}.match-row{border-bottom:1px solid var(--line);padding:2rem 0}.match-row label{display:block;margin-bottom:1rem}.match-row select{font:inherit;width:100%;background:white;padding:1rem;border:1px solid #aebdcd;border-radius:.6rem}.row-status{font-size:1.6rem;margin-top:1rem}.row-status:empty{display:none}@media(max-width:600px){.media iframe{height:34rem}.lesson-shell__title{font-size:1.8rem}}@media print{.media iframe{display:none}.subsection{break-inside:avoid}}
+
+.table-wrap{overflow-x:auto;margin:2rem 0}table{width:100%;border-collapse:collapse;font-size:1.65rem}th,td{padding:1.5rem;border:1px solid var(--line);text-align:left;vertical-align:top}thead{background:#eaf4ff}tbody th{background:#f7f9fb}.portfolio{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin:2rem 0}.portfolio article{padding:2rem;border:1px solid var(--line);border-top:4px solid var(--green);border-radius:.6rem;background:white}.portfolio article:last-child{border-top-color:#a32626}.portfolio h4{color:#0d3155}.term{border-bottom:1px solid var(--line);background:white}.term summary{padding:1.6rem;cursor:pointer;font-weight:700}.term p{padding:0 1.6rem 1.6rem}.worksheet label{display:block;font-weight:650}.worksheet textarea{font:inherit;width:100%;min-height:16rem;padding:1.5rem;margin:1rem 0 2rem;border:1px solid #aebdcd;border-radius:.6rem}.sequence-card p{margin-bottom:0}@media(max-width:850px){.portfolio{grid-template-columns:1fr}}@media print{.term::details-content{display:block}}
+</style></head><body><a class="skip-link" href="#intro">Skip to content</a><div class="lesson-shell"><header class="lesson-shell__header"><div class="lesson-shell__title">DMS 5850 · Capital Allocation &amp; Financial Risk</div><div class="lesson-shell__meta">Week 2</div></header><main class="lesson-shell__body"><div class="lesson-page"><section class="lesson-block hero" id="intro"><p class="eyebrow">DMS 5850 · Week 2</p><h1>Capital Allocation, Framing Strategic Initiatives, and Risk in Healthcare Financial Decision-Making</h1><nav class="lesson-nav" aria-label="Sections"><a href="#section-1">Context</a><a href="#section-2">Strategic Alignment</a><a href="#section-3">Financial Mechanics</a><a href="#section-4">Risk Analysis</a><a href="#section-5">ECPOA Application</a></nav></section>
+<section class="lesson-block " id="section-1"><h2>1. Executive Summary &amp; Foundational Context</h2>
+<p>In Week 1, we established the quantitative diagnostic baseline of health system performance. Operating through the lens of financial accounting, we evaluated historical liquidity, debt structure, asset efficiency, and operating margins. Historical diagnostic analysis answers a fundamental question for executive leadership: What is the baseline capacity of our balance sheet and operational cash flow to absorb future strategic risk?</p>
+<p>In Week 2, our focus shifts from historical diagnostic accounting to prospective financial management and strategic capital deployment. Executive healthcare leadership is fundamentally defined by the allocation of scarce capital under conditions of reimbursement volatility, regulatory shift, and operational uncertainty. Every dollar committed to a capital expenditure (CapEx) represents an opportunity cost—a decision to forgo alternative strategic investments, debt reduction, or liquid balance sheet preservation.</p>
+<p>This lecture frames the theoretical and practical mechanics of Capital Budgeting &amp; Strategic Investment Thinking. We examine how healthcare organizations bridge the gap between high-level clinical mission and quantitative financial return requirements, establishing the baseline assumptions necessary to scaffold Section 2 of your Executive Capital Proposal and Organizational Assessment (ECPOA).</p>
+</section>
+<section class="lesson-block alt" id="section-2"><h2>2. Theoretical Frameworks &amp; Strategic Alignment</h2>
+<h3 class="drug-heading">2.1 The Capital Budgeting Process in Healthcare Governance</h3>
+<p>Capital budgeting is the formal decision-making process by which healthcare organizations evaluate, select, and fund long-term physical or technological assets expected to generate operational or financial returns over a multi-year horizon (Reiter &amp; Song, 2024). Unlike routine operational expenditures, capital investments commit health system resources irreversibly over extended timeframes, altering the organization&#x27;s cost structure, debt capacity, and strategic positioning.</p>
+<p>The executive capital allocation pipeline typically moves through five distinct governance stages:</p>
+<div class="card-sequence">
+<article class="sequence-card"><h4>Project Identification &amp; Operational Gap Definition:</h4><p>Identifying clinical service line deficits, technological obsolescence, capacity constraints, or value-based care delivery gaps.</p></article>
+<article class="sequence-card"><h4>Cash Flow &amp; Capital Outlay Estimation:</h4><p>Establishing baseline capital acquisition costs (CapEx) and incremental operating revenues/expenses (OpEx) across the asset&#x27;s lifecycle.</p></article>
+<article class="sequence-card"><h4>Quantitative Project Evaluation:</h4><p>Applying discounted cash flow (DCF) techniques—including Net Present Value (NPV), Internal Rate of Return (IRR), and Payback Period—against organizational hurdle rates.</p></article>
+<article class="sequence-card"><h4>Risk &amp; Sensitivity Analysis:</h4><p>Stress-testing project assumptions against reimbursement shifts, volume fluctuations, and inflation.</p></article>
+<article class="sequence-card"><h4>Post-Audit Governance &amp; Capital Tracking:</h4><p>Comparing actual post-implementation financial and clinical performance against initial business case models.</p></article>
+</div>
+<h3 class="drug-heading">2.2 Financial Hurdle Rates vs. Mission-Driven Imperatives</h3>
+<p>A central challenge in healthcare capital allocation is managing the tension between quantitative financial hurdle rates and non-financial, mission-driven imperatives. In investor-owned healthcare systems, capital allocation is heavily weighted toward maximizing shareholder value through weighted average cost of capital (WACC) hurdle thresholds. In not-for-profit (IRS 501(c)(3)) systems, financial return remains vital for community safety-net sustainability, but capital allocation models must explicitly incorporate clinical quality, health equity, community access, and strategic necessity.</p>
+<p>Executive leadership teams utilize portfolio capital matrices to evaluate proposals across two axes: Financial Viability (NPV/IRR) and Strategic/Clinical Alignment.</p>
+<div class="portfolio">
+<article><h4>Category A (Strategic Drivers):</h4><p>High financial return and high strategic alignment. These initiatives generate the positive net present value (NPV) required to fund system growth and cross-subsidize non-profitable clinical services.</p></article>
+<article><h4>Category B (Mission Core / Cross-Subsidized):</h4><p>High strategic/clinical value but negative financial return (negative NPV). Executive governance requires that these projects be explicitly paired with revenue-generating initiatives from Category A to maintain overall organizational margin stability.</p></article>
+<article><h4>Category C (Operational Scale):</h4><p>High financial efficiency (cost reduction/yield enhancement) with lower direct clinical differentiation.</p></article>
+<article><h4>Category D (Capital Drain):</h4><p>Low financial return and low strategic alignment. These projects are deferred or rejected during formal capital rationing.</p></article>
+</div>
+</section>
+<section class="lesson-block " id="section-3"><h2>3. Financial Mechanics: CapEx, OpEx, and Incremental Cash Flows</h2>
+<h3 class="drug-heading">3.1 Accounting Distinction: Capital Outlay (CapEx) vs. Operating Expense (OpEx)</h3>
+<p>Developing an executive business case requires precise classification of capital expenditures versus operating expenses. Misclassifying these items distorts both balance sheet leverage ratios and income statement operating margins.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Financial Attribute</th><th scope="col">Capital Expenditure (CapEx)</th><th scope="col">Operating Expense (OpEx)</th></tr></thead><tbody>
+<tr><th scope="row">Accounting Definition</th><td>Acquisition of long-term physical assets, technology, or facility structural renovations capitalized on the Balance Sheet.</td><td>Day-to-day operational costs incurred to generate revenue during the current accounting period, recognized on the Income Statement.</td></tr>
+<tr><th scope="row">Financial Statement Impact</th><td>Capitalized as Property, Plant, &amp; Equipment (PP&amp;E); depreciated over the useful economic life of the asset.</td><td>Expensed immediately against Net Operating Revenue, directly reducing current Operating Margin.</td></tr>
+<tr><th scope="row">Cash Flow Classification</th><td>Cash Flows from Investing Activities (Statement of Cash Flows).</td><td>Cash Flows from Operating Activities (Statement of Cash Flows).</td></tr>
+<tr><th scope="row">Healthcare Examples</th><td>Robotic surgical systems, facility build-outs, MRI scanners, enterprise health IT infrastructure.</td><td>Clinical labor salaries, disposable surgical supplies, software maintenance licenses, facility utilities.</td></tr>
+</tbody></table></div>
+<h3 class="drug-heading">3.2 Principles of Incremental Cash Flow Estimation</h3>
+<p>When constructing a capital proposal budget, executive financial modeling must isolate incremental cash flows—the net change in organizational cash inflows and outflows directly attributable to the proposed capital project (Reiter &amp; Song, 2024).</p>
+<p>Executive teams must enforce three critical cash flow estimation rules:</p>
+<div class="panel framework"><p>Sunk Costs Are Irrelevant: Costs already incurred prior to the decision point (e.g., historical feasibility study fees, architectural design deposits) must be excluded from prospective project valuation.</p></div>
+<div class="panel framework"><p>Opportunity Costs Must Be Quantified: If a capital project utilizes existing system assets (such as reallocating hospital square footage or converting an existing outpatient wing), the lost cash flow or rental value of that alternative use must be charged against the project.</p></div>
+<div class="panel framework"><p>Cannibalization / Cannibalized Revenues: If a new ambulatory surgery center (ASC) capital project draws patient volume away from the main hospital’s inpatient operating rooms, the net lost margin at the main hospital must be subtracted from the ASC&#x27;s projected incremental revenues.</p></div>
+</section>
+<section class="lesson-block " id="section-4"><h2>4. Risk Analysis and Uncertainty in Capital Planning</h2>
+<p>Strategic capital planning involves multi-year projections in environment characterized by shifting payer mixes, regulatory mandates, and labor cost inflation. As outlined in Reiter &amp; Song (2024) Chapter 15, project risk evaluation requires moving beyond single-point estimates to analyze variability in net returns.</p>
+<h3 class="drug-heading">4.1 Sensitivity Analysis</h3>
+<p>Sensitivity analysis evaluates how much a project’s NPV or IRR changes in response to a specified percentage change in a single key variable, holding all other variables constant. Key sensitivity drivers in healthcare capital modeling include:</p>
+<div class="panel framework"><p>Patient Volume / Utilization Rates: Impact of lower-than-projected bed occupancy or surgical case volume.</p></div>
+<div class="panel framework"><p>Commercial vs. Government Payer Mix: Margin erosion resulting from shifts from commercial insurance toward Medicare/Medicaid.</p></div>
+<div class="panel framework"><p>Clinical Labor Inflation: Escalation in nursing and technical wage rates or temporary agency staffing utilization.</p></div>
+<h3 class="drug-heading">4.2 Scenario Analysis</h3>
+<p>Scenario analysis evaluates project viability across discrete, multi-variable future states. Rather than isolating a single driver, executive teams construct coherent operating environments:</p>
+<div class="panel framework"><p>Base-Case Scenario: Expected operational volume, contracted payer rates, and standard inflation assumptions.</p></div>
+<div class="panel framework"><p>Best-Case Scenario: Accelerated patient adoption, favorable commercial payer contracting, and optimal clinical staffing costs.</p></div>
+<div class="panel framework"><p>Worst-Case Scenario: Volume shortfalls, CMS reimbursement cuts, unexpected regulatory compliance costs, and elevated wage inflation.</p></div>
+<p>If a project yields an exceptionally negative NPV under the worst-case scenario, executive leadership must establish explicit risk mitigation strategies—such as phased capital deployment, flexible staffing models, or joint-venture risk sharing—before presenting the proposal for board approval.</p>
+</section>
+<section class="lesson-block alt" id="section-5"><h2>5. Executive Takeaways &amp; ECPOA Application Guide</h2>
+<h3 class="drug-heading">5.1 Translating Theory to Your ECPOA Master Worksheet</h3>
+<p>This week’s theoretical concepts directly inform your execution of Section 2: Strategic Initiative Framing &amp; Capital Prerequisites within your continuous ECPOA Master Worksheet due this Sunday:</p>
+<div class="worksheet"><label for="worksheet-2">Section 2.1 — Proposed Capital Innovation &amp; Strategic Alignment:</label><ul>
+<li>Clearly define the healthcare capital innovation you are proposing for your health system (or proxy organization).</li>
+<li>Articulate the precise operational or clinical gap driving this request.</li>
+<li>Frame the strategic alignment: Connect your proposal directly to institutional mission, vision, health equity goals, or value-based market positioning.</li>
+</ul><textarea id="worksheet-2" aria-label="Draft for Section 2.1 — Proposed Capital Innovation &amp; Strategic Alignment:"></textarea></div>
+<div class="worksheet"><label for="worksheet-6">Section 2.2 — Baseline Capital Outlay (CapEx) &amp; Operational Expense (OpEx) Assumptions:</label><ul>
+<li>Itemize initial capital acquisition costs (equipment, technology, facility renovation, installation).</li>
+<li>Establish multi-year operational expense assumptions (labor, supplies, maintenance, IT support).</li>
+<li>State the revenue drivers (volume estimates, reimbursement rates, payer mix) and explicitly note any potential cannibalization of existing service line margins.</li>
+</ul><textarea id="worksheet-6" aria-label="Draft for Section 2.2 — Baseline Capital Outlay (CapEx) &amp; Operational Expense (OpEx) Assumptions:"></textarea></div>
+<h3 class="drug-heading">5.2 Key Terminology Cheat-Sheet</h3>
+<details class="term"><summary>CapEx (Capital Expenditure):</summary><p>Outlays for long-term physical assets capitalized on the balance sheet and depreciated over time.</p></details>
+<details class="term"><summary>OpEx (Operating Expense):</summary><p>Operational expenses incurred during routine operations recognized immediately on the income statement.</p></details>
+<details class="term"><summary>Hurdle Rate:</summary><p>The minimum rate of return (or cost of capital threshold) a capital project must achieve to gain financial approval.</p></details>
+<details class="term"><summary>Incremental Cash Flow:</summary><p>The additional net cash flow generated specifically by accepting a capital project.</p></details>
+<details class="term"><summary>Cannibalization:</summary><p>Margin loss experienced by an existing service line when a new capital project redirects patient volume away from internal facilities.</p></details>
+<details class="term"><summary>Sensitivity Analysis:</summary><p>Quantitative stress-testing measuring how changes in a single input variable alter project NPV.</p></details>
+<p class="template-note">Draft responses remain on this page until you close or reload it. Download your notes to keep a copy.</p><button type="button" class="primary" id="downloadNotes">Download ECPOA notes</button><p id="notesStatus" class="notes-status" role="status"></p>
+</section>
+<section class="lesson-block tint" id="practice"><h2>Apply the Financial Distinctions</h2><p>Match each description to its financial concept.</p>
+<div class="match-row" data-answer="Sensitivity Analysis"><label for="match-0">Quantitative stress-testing measuring how changes in a single input variable alter project NPV.</label><select id="match-0"><option value="">Choose a concept…</option><option>Cannibalization</option><option>Opportunity Costs</option><option>Scenario Analysis</option><option>Sensitivity Analysis</option><option>Sunk Costs</option></select><div class="row-status" aria-live="polite"></div></div>
+<div class="match-row" data-answer="Cannibalization"><label for="match-1">Margin loss experienced by an existing service line when a new capital project redirects patient volume away from internal facilities.</label><select id="match-1"><option value="">Choose a concept…</option><option>Cannibalization</option><option>Opportunity Costs</option><option>Scenario Analysis</option><option>Sensitivity Analysis</option><option>Sunk Costs</option></select><div class="row-status" aria-live="polite"></div></div>
+<div class="match-row" data-answer="Opportunity Costs"><label for="match-2">If a capital project utilizes existing system assets (such as reallocating hospital square footage or converting an existing outpatient wing), the lost cash flow or rental value of that alternative use must be charged against the project.</label><select id="match-2"><option value="">Choose a concept…</option><option>Cannibalization</option><option>Opportunity Costs</option><option>Scenario Analysis</option><option>Sensitivity Analysis</option><option>Sunk Costs</option></select><div class="row-status" aria-live="polite"></div></div>
+<div class="assessment-actions"><button type="button" class="primary" id="checkMatches">Check matches</button><button type="button" class="secondary" id="resetMatches">Reset matches</button></div><div class="feedback" id="matchFeedback" role="status"></div></section></div></main></div><script>
+const rows=[...document.querySelectorAll('.match-row')],feedback=document.getElementById('matchFeedback');
+const hints=['Distinguish changing one input from changing several inputs together.','Consider the effect of redirecting patient volume within the same organization.','Distinguish the value of an alternative use from costs already incurred.'];
+document.getElementById('checkMatches').addEventListener('click',()=>{
+ if(rows.some(row=>!row.querySelector('select').value)){feedback.className='feedback show incorrect';feedback.textContent='Choose a concept for every description before checking.';return;}
+ let count=0;rows.forEach((row,i)=>{const good=row.querySelector('select').value===row.dataset.answer;count+=good?1:0;row.querySelector('.row-status').textContent=good?'Correct.':'Not quite. '+hints[i];row.querySelector('select').setAttribute('aria-invalid',String(!good));});feedback.className='feedback show '+(count===3?'correct':'incorrect');feedback.textContent=count+' of 3 concepts matched correctly.';
+});
+function clear(row){row.querySelector('.row-status').textContent='';row.querySelector('select').removeAttribute('aria-invalid');feedback.className='feedback';feedback.textContent='';}
+rows.forEach(row=>row.querySelector('select').addEventListener('change',()=>clear(row)));
+document.getElementById('resetMatches').addEventListener('click',()=>{rows.forEach(row=>{row.querySelector('select').value='';clear(row);});rows[0].querySelector('select').focus();});
+document.getElementById('downloadNotes').addEventListener('click',()=>{
+ const fields=[...document.querySelectorAll('.worksheet textarea')],status=document.getElementById('notesStatus');
+ if(!fields.some(field=>field.value.trim())){status.textContent='Write a draft response before downloading.';fields[0].focus();return;}
+ const text='DMS 5850 — Week 2 ECPOA Notes\n\n'+fields.map(field=>field.closest('.worksheet').querySelector('label').textContent+'\n'+field.value.trim()).join('\n\n');
+ const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download='DMS5850-week-2-ECPOA-notes.txt';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent='Notes downloaded.';
+});
+</script></body></html>
